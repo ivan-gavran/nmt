@@ -45,12 +45,12 @@ idSize := tree.NamespaceSize() // outputs 1
 ### Ignore Max Namespace
 
 If the NMT is configured with `IgnoreMaxNamespace` set to true (the flag is explained [here](#nmt-initialization-and-configuration)), then the calculation of the namespace ID range of non-leaf nodes in the [namespace hash function](./spec/nmt.md#namespaced-hash) will change slightly.
-That is, when determining the upper limit of the namespace ID range for a tree node, the maximum possible namespace `maxPossibleNamespace` should not be taken into account.
-(In the preceding code example with the ID size of `1` byte, the value of `maxPossibleNamespace` is $2^8-1 = 0xFF$.)
+That is, when determining the upper limit of the namespace ID range for a tree node, the maximum possible namespace $\mathrm{maxPossibleNamespace}$ should not be taken into account.
+(In the preceding code example with the ID size of `1` byte, the value of $\mathrm{maxPossibleNamespace}$  is $2^8-1 = 0xFF$.)
 
-Concretely, for a node `n` with children `l` and `r`, the namespace ID is the largest namespace value from `l` and `r` smaller than  `maxPossibleNamespace`, if such a namespace ID exists.
-Otherwise, if all candidate values are equal to `maxPossibleNamespace`, the namespace ID of `n` is set to `maxPossibleNamespace`.
-Precisely, if a set `C = {ns `$\in$` {l.minNs, l.maxNs, r.minNs, r.maxNs}: ns < maxPossibleNamespace}` is not empty, `n.maxNs = max(C)`. If `C` is empty, `n.maxNs = maxPossibleNamespace`.
+Concretely, for a node $\mathrm{n}$ with children $\mathrm{l}$ and $\mathrm{r}$, the namespace ID is the largest namespace value from $\mathrm{l}$ and $\mathrm{r}$ smaller than $\mathrm{maxPossibleNamespace}$, if such a namespace ID exists.
+Otherwise, if all candidate values are equal to $\mathrm{maxPossibleNamespace}$, the namespace ID of $\mathrm{n}$ is set to $\mathrm{maxPossibleNamespace}$.
+Precisely, if a set $C = \{\mathrm{ns} \in \{\mathrm{l.minNs, l.maxNs, r.minNs, r.maxNs}\}: \mathrm{ns} < \mathrm{maxPossibleNamespace}\}$ is not empty, $\mathrm{n.maxNs = max(C)}$. If $C$ is empty, $\mathrm{n.maxNs = maxPossibleNamespace}$.
 
 ## Add Leaves
 
