@@ -663,6 +663,42 @@ func TestNMT_forgedNamespaceEmptinessProof(t *testing.T) {
 	}
 }
 
+func TestNMT_PanicForEmptyRange(t *testing.T) {
+	data := [][]byte{
+		append(namespace.ID{1}, []byte("leaf_0")...),
+		append(namespace.ID{1}, []byte("leaf_1")...),
+		append(namespace.ID{2}, []byte("leaf_2")...),
+		append(namespace.ID{2}, []byte("leaf_3")...),
+	}
+	// Init a tree with the namespace size as well as
+	// the underlying hash function:
+	tree := New(sha256.New(), NamespaceIDSize(1))
+	for _, d := range data {
+		if err := tree.Push(d); err != nil {
+			panic(fmt.Sprintf("unexpected error: %v", err))
+		}
+	}
+
+	root, err := tree.Root()
+	require.NoError(t, err)
+	actualLeaves := tree.Get(namespace.ID{1})
+	if len(actualLeaves) == 0 {
+		t.Fatalf("Get(namespace.ID{1}) should have returned two leaves but returned none.")
+	}
+
+	customNode := []byte{7}
+	panickingProof := Proof{
+		start:                   0,
+		end:                     0,
+		nodes:                   [][]byte{customNode},
+		leafHash:                []byte{},
+		isMaxNamespaceIDIgnored: true,
+	}
+
+	panickingProof.VerifyNamespace(sha256.New(), namespace.ID{1}, [][]byte{}, root)
+
+}
+
 func TestInvalidOptions(t *testing.T) {
 	shouldPanic(t, func() {
 		_ = New(sha256.New(), InitialCapacity(-1))
