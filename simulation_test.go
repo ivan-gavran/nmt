@@ -82,8 +82,8 @@ func TestFromITF(t *testing.T) {
 
 	var tree *nmt.NamespacedMerkleTree
 
-	itfFileName := "ITF_files/runTest.itf.json"
-	// itfFileName := "ITF_files/debug.itf.json"
+	itfFileName := "formal_spec/ITF_files/runTest.itf.json"
+	// itfFileName := "formal_spec/ITF_files/panicIssue.itf.json"
 	data, err := ioutil.ReadFile(itfFileName)
 	if err != nil {
 		t.Errorf("Error opening file: %v", err)
